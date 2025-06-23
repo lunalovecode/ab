@@ -7,7 +7,7 @@ st.set_page_config(
 import sqlite3
 from db import get_connection, is_empty
 from time import sleep
-from argon2 import PasswordHasher
+import hashlib
 
 if "current_user" not in st.session_state:
     st.session_state.current_user = None
