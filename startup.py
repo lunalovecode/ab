@@ -35,7 +35,7 @@ with get_connection() as conn:
                     username TEXT NOT NULL UNIQUE,
                     email TEXT UNIQUE,
                     profile_pic BLOB NOT NULL UNIQUE,
-                    password TEXT NOT NULL);''')
+                    password BLOB NOT NULL);''')
         conn.commit()
     
     posts_exist = cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='Posts';").fetchone()

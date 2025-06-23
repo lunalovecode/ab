@@ -7,6 +7,7 @@ st.set_page_config(
 import sqlite3
 from db import get_connection, is_empty
 from time import sleep
+import bcrypt
 
 if "current_user" not in st.session_state:
     st.session_state.current_user = None
@@ -32,10 +33,11 @@ if create:
         st.error("Please provide a password.")
     else:
         picture_data = profile_picture.read()
+        hashed = bcrypt.hashpw(password, bcrypt.gensalt())
         with get_connection() as conn:
             cursor = conn.cursor()
             try:
-                cursor.execute("INSERT INTO Accounts VALUES (?, ?, ?, ?)", (name, username, picture_data, password))
+                cursor.execute("INSERT INTO Accounts VALUES (?, ?, ?, ?)", (name, username, picture_data, hashed))
                 conn.commit()
                 st.session_state.current_user = username
                 st.success("Created your new account!")

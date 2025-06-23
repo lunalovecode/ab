@@ -20,9 +20,10 @@ st.page_link("pages/create-account.py", label="Create an account")
 if log_in:
     with get_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM Accounts WHERE username = ? AND password = ?", (username, password))
+        cursor.execute("SELECT password FROM Accounts WHERE username = ?", (username,))
         conn.commit()
-        if not cursor.fetchone():
+        pw = cursor.fetchone()
+        if not bcrypt.checkpw(password, pw):
             st.error("Username or password is incorrect")
         else:
             st.success("Logged in!")
