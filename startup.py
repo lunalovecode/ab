@@ -8,6 +8,7 @@ from db import get_connection
 import sqlite3
 from time import sleep
 import sys
+import subprocess
 st.write("sys.executable:", sys.executable)
 st.write("sys.path:", sys.path)
 
