@@ -20,7 +20,7 @@ if "confirm_delete" not in st.session_state:
 from PIL import Image
 import numpy as np
 from io import BytesIO
-from deepface import DeepFace
+from insightface.app import FaceAnalysis
 
 side_bar()
 
