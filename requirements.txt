@@ -1,4 +1,4 @@
-pip>==25.1.1
+pip>=25.1.1
 streamlit>=1.45.0
 requests>=2.27.1
 numpy>=1.14.0
