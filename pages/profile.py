@@ -19,7 +19,7 @@ if "confirm_delete" not in st.session_state:
 
 from PIL import Image
 import numpy as np
-import io
+from io import BytesIO
 from deepface import DeepFace
 
 side_bar()
@@ -58,12 +58,18 @@ with get_connection() as conn:
                 cursor.execute("UPDATE Accounts SET password = ? WHERE username = ?", (new_password, st.session_state.current_user))
                 conn.commit()
             if new_pfp:
-                img1 = Image.open(pic_data)
-                img2 = Image.open(new_pfp_data)
-                try:
-                    result = DeepFace.verify(img1, img2, model_name="Facenet", enforce_detection=True)
-                    if result["verified"]:                
-                        st.success("They match!")
+                img1 = np.arraay(Image.open(pic_data).convert("RGB"))
+                img2 = np.array(Image.open(new_pfp_data).convert("RGB"))
+                app = FaceAnalysis(name="buffalo_l", providers=["CPUExecutionProvider"])
+                app.prepare(ctx_id=0)
+                faces1 = app.get(img1)
+                faces2 = app.get(img2)
+
+                if faces1 and faces2:
+                    emb1 = faces1[0].embedding
+                    emb2 = faces2[0].embedding
+                    similarity = np.dot(emb1, emb2) / (np.linalg.norm(emb1) * np.linalg.norm(emb2))
+                    if similarity > 0.5:
                         try:
                             cursor.execute("UPDATE Accounts SET profile_pic = ? WHERE username = ?", (new_pfp_data, st.session_state.current_user))
                             conn.commit()
@@ -76,7 +82,7 @@ with get_connection() as conn:
                                 st.error("That profile picture is already in use. Is someone stealing your face or are you stealing theirs? :face_with_raised_eyebrow:")
                     else:
                         st.error("Faces don't match.")
-                except Exception as e:
+                else:
                     st.error("Could not detect faces in one or both images.")
 
 def delete_account():

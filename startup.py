@@ -7,7 +7,7 @@ st.set_page_config(
 from db import get_connection
 import sqlite3
 from time import sleep
-from deepface import DeepFace
+from insightface.app import FaceAnalysis
 # import sys
 # import subprocess
 # st.write("sys.executable:", sys.executable)
