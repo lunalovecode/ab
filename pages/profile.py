@@ -58,7 +58,7 @@ with get_connection() as conn:
                 cursor.execute("UPDATE Accounts SET password = ? WHERE username = ?", (new_password, st.session_state.current_user))
                 conn.commit()
             if new_pfp:
-                img1 = np.arraay(Image.open(pic_data).convert("RGB"))
+                img1 = np.array(Image.open(pic_data).convert("RGB"))
                 img2 = np.array(Image.open(new_pfp_data).convert("RGB"))
                 app = FaceAnalysis(name="buffalo_l", providers=["CPUExecutionProvider"])
                 app.prepare(ctx_id=0)
