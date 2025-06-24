@@ -70,7 +70,7 @@ with get_connection() as conn:
                     emb1 = faces1[0].embedding
                     emb2 = faces2[0].embedding
                     similarity = np.dot(emb1, emb2) / (np.linalg.norm(emb1) * np.linalg.norm(emb2))
-                    if similarity > 0.5:
+                    if similarity > 0.4:
                         try:
                             cursor.execute("UPDATE Accounts SET profile_pic = ? WHERE username = ?", (new_pfp_data, st.session_state.current_user))
                             conn.commit()
