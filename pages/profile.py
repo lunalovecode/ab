@@ -61,7 +61,7 @@ with get_connection() as conn:
                 img1 = Image.open(pic_data)
                 img2 = Image.open(new_pfp_data)
                 try:
-                    result = DeepFace.verify(img1, img2, enforce_detection=True)
+                    result = DeepFace.verify(img1, img2, model_name="Facenet", enforce_detection=True)
                     if result["verified"]:                
                         st.success("They match!")
                         try:
