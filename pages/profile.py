@@ -17,18 +17,7 @@ if st.session_state.current_user is None:
 if "confirm_delete" not in st.session_state:
     st.session_state.confirm_delete = False
 
-st.write("sys.executable:", sys.executable)
-st.write("sys.path:", sys.path)
-
-installed = subprocess.run([sys.executable, "-m", "pip", "freeze"], capture_output=True, text=True)
-st.text("Installed packages:\n" + installed.stdout)
-
-try:
-    import face_recognition
-    st.success(f"version: {bcrypt.__version__}")
-except ModuleNotFoundError as e:
-    st.error(f"face recognition not found: {e}")
-
+import face_recognition
 from PIL import Image
 import numpy as np
 import io
