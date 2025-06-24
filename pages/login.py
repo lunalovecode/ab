@@ -21,9 +21,18 @@ st.page_link("pages/create-account.py", label="Create an account")
 if log_in:
     with get_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM Accounts WHERE username = ? AND password = ?", (username, password))
+        cursor.execute("SELECT password FROM Accounts WHERE username = ?", (username,))
         conn.commit()
-        if not cursor.fetchone():
+        p = cursor.fetchone()[0]
+        salt = p[:16]
+        key = p[16:]
+        new_key = hashlib.pbkdf2_hmac(
+            'sha256',
+            password.encode(),
+            salt,
+            100000
+        )
+        if new_key != key:
             st.error("Username or password is incorrect")
         else:
             st.success("Logged in!")

@@ -8,6 +8,7 @@ import sqlite3
 from db import get_connection, is_empty
 from time import sleep
 import hashlib
+import os
 
 if "current_user" not in st.session_state:
     st.session_state.current_user = None
@@ -33,10 +34,19 @@ if create:
         st.error("Please provide a password.")
     else:
         picture_data = profile_picture.read()
+        salt = os.urandom(16)  # Secure random salt
+        key = hashlib.pbkdf2_hmac(
+            'sha256',
+            password.encode(),
+            salt,
+            100000
+        )
+        hashed = salt + key
+        st.write(hashed)
         with get_connection() as conn:
             cursor = conn.cursor()
             try:
-                cursor.execute("INSERT INTO Accounts VALUES (?, ?, ?, ?)", (name, username, picture_data, password))
+                cursor.execute("INSERT INTO Accounts VALUES (?, ?, ?, ?)", (name, username, picture_data, hashed,))
                 conn.commit()
                 st.session_state.current_user = username
                 st.success("Created your new account!")
