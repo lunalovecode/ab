@@ -23,20 +23,23 @@ if log_in:
         cursor = conn.cursor()
         cursor.execute("SELECT password FROM Accounts WHERE username = ?", (username,))
         conn.commit()
-        p = cursor.fetchone()[0]
-        salt = p[:16]
-        key = p[16:]
-        new_key = hashlib.pbkdf2_hmac(
-            'sha256',
-            password.encode(),
-            salt,
-            100000
-        )
-        if new_key != key:
+        p = cursor.fetchone()
+        if p is None:
             st.error("Username or password is incorrect")
-        else:
-            st.success("Logged in!")
-            st.session_state.current_user = username
-            with st.spinner("Redirecting to home page..."):
-                sleep(5)
-                st.switch_page("pages/home.py")
+        else: 
+            salt = p[0][:16]
+            key = p[0][16:]
+            new_key = hashlib.pbkdf2_hmac(
+                'sha256',
+                password.encode(),
+                salt,
+                100000
+            )
+            if new_key != key:
+                st.error("Username or password is incorrect")
+            else:
+                st.success("Logged in!")
+                st.session_state.current_user = username
+                with st.spinner("Redirecting to home page..."):
+                    sleep(5)
+                    st.switch_page("pages/home.py")

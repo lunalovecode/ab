@@ -7,19 +7,19 @@ st.set_page_config(
 from db import get_connection
 import sqlite3
 from time import sleep
-import sys
-import subprocess
-st.write("sys.executable:", sys.executable)
-st.write("sys.path:", sys.path)
+# import sys
+# import subprocess
+# st.write("sys.executable:", sys.executable)
+# st.write("sys.path:", sys.path)
 
-installed = subprocess.run([sys.executable, "-m", "pip", "freeze"], capture_output=True, text=True)
-st.text("Installed packages:\n" + installed.stdout)
+# installed = subprocess.run([sys.executable, "-m", "pip", "freeze"], capture_output=True, text=True)
+# st.text("Installed packages:\n" + installed.stdout)
 
-try:
-    import deepface
-    st.success(f"version: {deepface.__version__}")
-except ModuleNotFoundError as e:
-    st.error(f"deepface not found: {e}")
+# try:
+    # import deepface
+    # st.success(f"version: {deepface.__version__}")
+# except ModuleNotFoundError as e:
+    # st.error(f"deepface not found: {e}")
 
 if "current_user" not in st.session_state:
     st.session_state.current_user = None
