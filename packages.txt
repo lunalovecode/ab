@@ -3,3 +3,5 @@ libffi-dev
 python3-dev
 cmake
 cargo
+libboost-all-dev
+libdlib-dev
