@@ -42,7 +42,6 @@ if create:
             100000
         )
         hashed = salt + key
-        st.write(hashed)
         with get_connection() as conn:
             cursor = conn.cursor()
             try:
