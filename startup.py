@@ -16,10 +16,10 @@ installed = subprocess.run([sys.executable, "-m", "pip", "freeze"], capture_outp
 st.text("Installed packages:\n" + installed.stdout)
 
 try:
-    import face_recognition
-    st.success(f"version: {bcrypt.__version__}")
+    import deepface
+    st.success(f"version: {deepface.__version__}")
 except ModuleNotFoundError as e:
-    st.error(f"face recognition not found: {e}")
+    st.error(f"deepface not found: {e}")
 
 if "current_user" not in st.session_state:
     st.session_state.current_user = None

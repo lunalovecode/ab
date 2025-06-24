@@ -17,10 +17,10 @@ if st.session_state.current_user is None:
 if "confirm_delete" not in st.session_state:
     st.session_state.confirm_delete = False
 
-import face_recognition
 from PIL import Image
 import numpy as np
 import io
+from deepface import DeepFace
 
 side_bar()
 
@@ -58,17 +58,11 @@ with get_connection() as conn:
                 cursor.execute("UPDATE Accounts SET password = ? WHERE username = ?", (new_password, st.session_state.current_user))
                 conn.commit()
             if new_pfp:
-                match_result = 0
-                new_pfp_data = new_pfp.getvalue()
-                image1 = face_recognition.load_image_file(io.BytesIO(pic_data))
-                image2 = face_recognition.load_image_file(io.BytesIO(new_pfp_data))
-                face_encodings1 = face_recognition.face_encodings(image1)
-                face_encodings2 = face_recognition.face_encodings(image2)
-                if len(face_encodings1) == 0 or len(face_encodings2) == 0:
-                    st.error("Could not detect faces in one or both images.")
-                else:
-                    match_result = face_recognition.compare_faces([face_encodings1[0]], face_encodings2[0], tolerance=0.5)
-                    if match_result[0]:
+                img1 = Image.open(pic_data)
+                img2 = Image.open(new_pfp_data)
+                try:
+                    result = DeepFace.verify(img1, img2, enforce_detection=True)
+                    if result["verified"]:                
                         st.success("They match!")
                         try:
                             cursor.execute("UPDATE Accounts SET profile_pic = ? WHERE username = ?", (new_pfp_data, st.session_state.current_user))
@@ -82,6 +76,8 @@ with get_connection() as conn:
                                 st.error("That profile picture is already in use. Is someone stealing your face or are you stealing theirs? :face_with_raised_eyebrow:")
                     else:
                         st.error("Faces don't match.")
+                except Exception as e:
+                    st.error("Could not detect faces in one or both images.")
 
 def delete_account():
     with get_connection() as conn:

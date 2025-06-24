@@ -34,7 +34,7 @@ if create:
         st.error("Please provide a password.")
     else:
         picture_data = profile_picture.read()
-        salt = os.urandom(16)  # Secure random salt
+        salt = os.urandom(16)
         key = hashlib.pbkdf2_hmac(
             'sha256',
             password.encode(),
